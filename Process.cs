@@ -17,7 +17,9 @@ namespace WindowsFormsApp1
 
         public int turnaround_time { get; set; }
 
-        public static int noOfProcesses { get; set; }
+        public static int total_turnaround_time { get; set; }
+
+        public static int total_waiting_time { get; set; }
 
         public Process(int pid, int arrival_time, int burst_time)
         {
@@ -25,7 +27,6 @@ namespace WindowsFormsApp1
             this.arrival_time= arrival_time;
             this.burst_time= burst_time;
             this.priority = 0;
-            noOfProcesses++;
         }
 
         public Process(int pid, int arrival_time, int burst_time, int priority)
@@ -34,7 +35,6 @@ namespace WindowsFormsApp1
             this.arrival_time = arrival_time;
             this.burst_time = burst_time;
             this.priority = priority;
-            noOfProcesses++;
         }
     }
 }

@@ -10,10 +10,10 @@ namespace WindowsFormsApp1
     internal class Scheduler
     {
         static List<Process> processList;
-        static int timeQuantum = 1;
-        static int timeQuantumCount = 0;
-        static bool locked = false;
-        static int processIndex = -1;
+        public static int timeQuantum = 1;
+        public static int timeQuantumCount = 0;
+        public static bool locked = false;
+        public static int processIndex = -1;
 
         public Scheduler(ref List<Process> processList_a)
         {
@@ -49,7 +49,7 @@ namespace WindowsFormsApp1
                 int minArrivalTime = int.MaxValue;
                 for (int i = 0; i < processList.Count; i++)
                 {
-                    if (processList.ElementAt(i).burst_time < minArrivalTime)
+                    if (processList.ElementAt(i).arrival_time < minArrivalTime)
                     {
                         if (!(processList.ElementAt(i).arrival_time <= timer))
                         {
@@ -66,6 +66,7 @@ namespace WindowsFormsApp1
             {
                 processList.ElementAt(processIndex).burst_time--;
                 processList.ElementAt(processIndex).turnaround_time++;
+                Process.total_turnaround_time++;
             }
             for (int i = 0; i < processList.Count; i++)
             {
@@ -77,6 +78,8 @@ namespace WindowsFormsApp1
                     }
                     processList.ElementAt(i).waiting_time++;
                     processList.ElementAt(i).turnaround_time++;
+                    Process.total_turnaround_time++;
+                    Process.total_waiting_time++;
                 }
             }
             return Tuple.Create(processList, processIndex);
@@ -120,6 +123,7 @@ namespace WindowsFormsApp1
             {
                 processList.ElementAt(processIndex).burst_time--;
                 processList.ElementAt(processIndex).turnaround_time++;
+                Process.total_turnaround_time++;
             }
             for (int i = 0; i < processList.Count; i++)
             {
@@ -131,6 +135,8 @@ namespace WindowsFormsApp1
                     }
                     processList.ElementAt(i).waiting_time++;
                     processList.ElementAt(i).turnaround_time++;
+                    Process.total_turnaround_time++;
+                    Process.total_waiting_time++;
                 }
             }
             return Tuple.Create(processList, processIndex);
@@ -169,6 +175,7 @@ namespace WindowsFormsApp1
             {
                 processList.ElementAt(processIndex).burst_time--;
                 processList.ElementAt(processIndex).turnaround_time++;
+                Process.total_turnaround_time++;
             }
             for (int i = 0; i < processList.Count; i++)
             {
@@ -180,6 +187,8 @@ namespace WindowsFormsApp1
                     }
                     processList.ElementAt(i).waiting_time++;
                     processList.ElementAt(i).turnaround_time++;
+                    Process.total_turnaround_time++;
+                    Process.total_waiting_time++;
                 }
             }
             return Tuple.Create(processList, processIndex);
@@ -219,10 +228,11 @@ namespace WindowsFormsApp1
                 locked = true;
 
             }
-            if (processList != null && processList.Count > 0 && processIndex < processList.Count)
+            if (processList != null && processList.Count > 0 && processIndex < processList.Count && processIndex != -1)
             {
                 processList.ElementAt(processIndex).burst_time--;
                 processList.ElementAt(processIndex).turnaround_time++;
+                Process.total_turnaround_time++;
             }
             for (int i = 0; i < processList.Count; i++)
             {
@@ -234,6 +244,8 @@ namespace WindowsFormsApp1
                     }
                     processList.ElementAt(i).waiting_time++;
                     processList.ElementAt(i).turnaround_time++;
+                    Process.total_turnaround_time++;
+                    Process.total_waiting_time++;
                 }
             }
             return Tuple.Create(processList, processIndex);
@@ -268,10 +280,11 @@ namespace WindowsFormsApp1
                     processIndex = i;
                 }
             }
-            if (processList != null && processList.Count > 0 && processIndex < processList.Count)
+            if (processList != null && processList.Count > 0 && processIndex < processList.Count && processIndex != -1)
             {
                 processList.ElementAt(processIndex).burst_time--;
                 processList.ElementAt(processIndex).turnaround_time++;
+                Process.total_turnaround_time++;
             }
             for (int i = 0; i < processList.Count; i++)
             {
@@ -283,6 +296,8 @@ namespace WindowsFormsApp1
                     }
                     processList.ElementAt(i).waiting_time++;
                     processList.ElementAt(i).turnaround_time++;
+                    Process.total_turnaround_time++;
+                    Process.total_waiting_time++;
                 }
             }
             return Tuple.Create(processList, processIndex);
@@ -314,6 +329,19 @@ namespace WindowsFormsApp1
                     p = processList.ElementAt(processIndex);
                     processList.RemoveAt(processIndex);
                     processList.Add(p);
+                    for(int i = processList.Count - 2; i >= 0; i --)
+                    {
+                        if (!(processList.ElementAt(i).arrival_time <= timer))
+                        {
+                            Process p1 = processList.ElementAt(i);
+                            processList[i] = processList[i + 1];
+                            processList[i + 1] = p1;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
                 }
                 locked = false;
                 timeQuantumCount = timeQuantum;
@@ -337,6 +365,7 @@ namespace WindowsFormsApp1
             {
                 processList.ElementAt(processIndex).burst_time--;
                 processList.ElementAt(processIndex).turnaround_time++;
+                Process.total_turnaround_time++;
             }
             for (int i = 0; i < processList.Count; i++)
             {
@@ -348,6 +377,8 @@ namespace WindowsFormsApp1
                     }
                     processList.ElementAt(i).waiting_time++;
                     processList.ElementAt(i).turnaround_time++;
+                    Process.total_turnaround_time++;
+                    Process.total_waiting_time++;
                 }
             }
             if (processList != null && processList.Count > 0 && processIndex < processList.Count && processIndex != -1)
